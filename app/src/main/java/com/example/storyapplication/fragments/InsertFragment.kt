@@ -3,10 +3,11 @@ package com.example.storyapplication.fragments
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +15,30 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.storyapplication.activities.CameraActivity
+import com.example.storyapplication.activities.HomeActivity
 import com.example.storyapplication.databinding.FragmentInsertBinding
+import com.example.storyapplication.responses.MessageResponse
+import com.example.storyapplication.retrofit.ApiConfig
+import com.example.storyapplication.utilities.BitmapUtil
 import com.example.storyapplication.utilities.NavigationUtil
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 class InsertFragment : Fragment() {
 
     private lateinit var binding: FragmentInsertBinding
+    private var getFile: File? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +60,54 @@ class InsertFragment : Fragment() {
             }
         }
 
+        binding.submitBtn.setOnClickListener {
+            uploadImage()
+        }
+
         return binding.root
     }
+
+    private fun uploadImage() {
+        if (getFile != null) {
+            val description = binding.description.text.toString().toRequestBody("text/plain".toMediaType())
+            val file = getFile as File
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "photo",
+                file.name,
+                file.asRequestBody("image/jpeg".toMediaType())
+            )
+
+            val apiService = ApiConfig.getRetrofitApiHeader()
+            val uploadImageRequest = apiService.addStory(description, imageMultipart)
+
+            uploadImageRequest.enqueue(object : Callback<MessageResponse> {
+                override fun onResponse(
+                    call: Call<MessageResponse>,
+                    response: Response<MessageResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null && !responseBody.error) {
+                            Toast.makeText(requireContext(), responseBody.message, Toast.LENGTH_SHORT).show()
+                            NavigationUtil.replaceActivityNoBack(requireContext(), HomeActivity::class.java)
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), response.message(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
+
+
+        } else {
+            Toast.makeText(requireActivity(), "Silakan masukkan berkas gambar terlebih dahulu.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     private val launcherIntentCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -58,11 +121,15 @@ class InsertFragment : Fragment() {
             } as? File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
             myFile?.let { file ->
+                getFile = reduceFileImage(file)
                 binding.previewImage.setImageBitmap(BitmapFactory.decodeFile(file.path))
             }
         }
     }
 
+    private fun reduceFileImage(file: File): File {
+        return BitmapUtil.reduceFileImage(file)
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

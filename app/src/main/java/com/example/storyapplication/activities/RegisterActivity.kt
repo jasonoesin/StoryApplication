@@ -10,6 +10,7 @@ import com.example.storyapplication.databinding.ActivityRegisterBinding
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
 import com.example.storyapplication.utilities.NavigationUtil
+import com.example.storyapplication.utilities.UserUtil
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -46,7 +47,7 @@ class RegisterActivity : AppCompatActivity() {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     Log.d("JS22-1", "onSuccess: $responseBody")
-                    NavigationUtil.replaceActivityNoBack(this@RegisterActivity, HomeActivity::class.java)
+                    NavigationUtil.replaceActivityNoBack(this@RegisterActivity, MainActivity::class.java)
                 } else {
                     Log.d("JS22-1", "onFailure: ${response.message()}")
                 }
