@@ -13,6 +13,11 @@ class NavigationUtil {
             ctx.startActivity(intent)
         }
 
+        fun replaceAct(ctx: Context, activity:  Class<*>?){
+            val intent = Intent(ctx, activity)
+            ctx.startActivity(intent)
+        }
+
         fun toDetail(ctx: Context, activity:  Class<*>?, id: String){
             val intent = Intent(ctx, activity)
             intent.putExtra("id", id)

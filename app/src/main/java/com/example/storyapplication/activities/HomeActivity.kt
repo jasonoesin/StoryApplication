@@ -1,12 +1,17 @@
 package com.example.storyapplication.activities
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapplication.R
 import com.example.storyapplication.adapter.StoryAdapter
 import com.example.storyapplication.databinding.ActivityHomeBinding
+import com.example.storyapplication.fragments.HomeFragment
+import com.example.storyapplication.fragments.InsertFragment
 import com.example.storyapplication.responses.GetResponse
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
@@ -24,33 +29,27 @@ class HomeActivity : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
 
-        getStories()
+        changeFragment(HomeFragment())
+
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.home-> changeFragment(HomeFragment())
+                R.id.add-> changeFragment(InsertFragment())
+                R.id.logout-> {
+                    NavigationUtil.replaceActivityNoBack(this@HomeActivity, MainActivity::class.java)
+                }
+            }
+            true
+        }
 
         setContentView(binding.root)
     }
 
-    private fun getStories() {
-        val client = ApiConfig.getRetrofitApiHeader().getStories()
-
-        client.enqueue(object : Callback<GetResponse> {
-            override fun onResponse(
-                call: Call<GetResponse>,
-                response: Response<GetResponse>
-            ) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    val storyAdapter = StoryAdapter(this@HomeActivity, responseBody.listStory)
-                    binding.rvStory.adapter = storyAdapter
-                    Log.d("JS22-1", "onSuccess: $responseBody")
-
-                } else {
-                    Log.d("JS22-1", "onFailure: ${response.message()}")
-                }
-            }
-
-            override fun onFailure(call: Call<GetResponse>, t: Throwable) {
-
-            }
-        })
+    private fun changeFragment(fragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
