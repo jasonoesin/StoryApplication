@@ -16,6 +16,7 @@ import com.example.storyapplication.responses.GetResponse
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
 import com.example.storyapplication.utilities.NavigationUtil
+import com.example.storyapplication.utilities.PreferencesUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +38,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.add-> changeFragment(InsertFragment())
                 R.id.logout-> {
                     NavigationUtil.replaceActivityNoBack(this@HomeActivity, MainActivity::class.java)
+                    PreferencesUtil.deleteData(this@HomeActivity)
                 }
             }
             true

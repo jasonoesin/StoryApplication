@@ -8,6 +8,7 @@ import com.example.storyapplication.responses.LoginResponse
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
 import com.example.storyapplication.utilities.NavigationUtil
+import com.example.storyapplication.utilities.PreferencesUtil
 import com.example.storyapplication.utilities.UserUtil
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,6 +23,16 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+        val preferencesData = PreferencesUtil.getData(this@MainActivity)
+
+        if(preferencesData.token != ""){
+            UserUtil.set(preferencesData)
+            Log.d("JS22-1", UserUtil.token)
+            Log.d("JS22-1", UserUtil.user_id)
+            Log.d("JS22-1", UserUtil.name)
+            NavigationUtil.replaceActivityNoBack(this@MainActivity, HomeActivity::class.java)
+        }
+
 
         binding.toRegister.setOnClickListener {
             NavigationUtil.replaceActivityNoBack(this@MainActivity, RegisterActivity::class.java)
@@ -33,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
     }
-
 
     private fun login() {
         val client = ApiConfig.getRetrofitApi().login(
@@ -50,6 +60,8 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful && responseBody != null) {
                     Log.d("JS22-1", "onSuccess: $responseBody")
                     UserUtil.set(responseBody.loginResult)
+                    PreferencesUtil.writeData(this@MainActivity, responseBody.loginResult)
+
                     NavigationUtil.replaceActivityNoBack(this@MainActivity, HomeActivity::class.java)
                 } else {
                     Log.d("JS22-1", "onFailure: ${response.message()}")

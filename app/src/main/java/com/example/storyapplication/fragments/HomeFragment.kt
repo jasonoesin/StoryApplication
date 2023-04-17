@@ -24,7 +24,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-//        return inflater.inflate(R.layout.fragment_home, container, false)
 
         getStories()
 

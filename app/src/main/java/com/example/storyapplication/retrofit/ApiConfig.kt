@@ -24,6 +24,8 @@ class ApiConfig {
         }
 
         fun getRetrofitApiHeader(): RetrofitApi{
+            Log.d("JS22-1", "API: ${UserUtil.token}")
+
             val loggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder()
