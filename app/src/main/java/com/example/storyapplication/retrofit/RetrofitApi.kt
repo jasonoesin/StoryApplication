@@ -1,5 +1,6 @@
 package com.example.storyapplication.retrofit
 
+import com.example.storyapplication.responses.DetailResponse
 import com.example.storyapplication.responses.GetResponse
 import com.example.storyapplication.responses.LoginResponse
 import com.example.storyapplication.responses.MessageResponse
@@ -24,4 +25,9 @@ interface RetrofitApi {
 
     @GET("stories")
     fun getStories(): Call<GetResponse>
+
+    @GET("stories/{id}")
+    fun getStoryDetail(
+        @Path("id") id: String
+    ): Call<DetailResponse>
 }

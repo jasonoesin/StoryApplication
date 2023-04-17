@@ -12,5 +12,11 @@ class NavigationUtil {
 
             ctx.startActivity(intent)
         }
+
+        fun toDetail(ctx: Context, activity:  Class<*>?, id: String){
+            val intent = Intent(ctx, activity)
+            intent.putExtra("id", id)
+            ctx.startActivity(intent)
+        }
     }
 }
