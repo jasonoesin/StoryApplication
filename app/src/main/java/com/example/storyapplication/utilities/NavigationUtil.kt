@@ -1,7 +1,10 @@
 package com.example.storyapplication.utilities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import androidx.core.app.ActivityOptionsCompat
 
 class NavigationUtil {
 
@@ -18,10 +21,10 @@ class NavigationUtil {
             ctx.startActivity(intent)
         }
 
-        fun toDetail(ctx: Context, activity:  Class<*>?, id: String){
+        fun toDetail(ctx: Context, activity: Class<*>?, id: String, toBundle: Bundle?){
             val intent = Intent(ctx, activity)
             intent.putExtra("id", id)
-            ctx.startActivity(intent)
+            ctx.startActivity(intent, toBundle)
         }
     }
 }

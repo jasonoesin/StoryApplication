@@ -22,7 +22,8 @@
             android:src="@drawable/ic_launcher_background"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:contentDescription="Image Story" />
+            android:contentDescription="Image Story"
+            android:transitionName="image"/>
 
         <TextView
             android:id="@+id/name"
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
+            android:transitionName="name"
             />
 
         <TextView
@@ -38,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
+            android:transitionName="description"
             />
     </LinearLayout>
 
