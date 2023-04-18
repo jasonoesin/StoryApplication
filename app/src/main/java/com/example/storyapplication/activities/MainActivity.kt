@@ -3,6 +3,7 @@ package com.example.storyapplication.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.storyapplication.databinding.ActivityMainBinding
 import com.example.storyapplication.responses.LoginResponse
 import com.example.storyapplication.responses.MessageResponse
@@ -27,9 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         if(preferencesData.token != ""){
             UserUtil.set(preferencesData)
-            Log.d("JS22-1", UserUtil.token)
-            Log.d("JS22-1", UserUtil.user_id)
-            Log.d("JS22-1", UserUtil.name)
             NavigationUtil.replaceActivityNoBack(this@MainActivity, HomeActivity::class.java)
         }
 
@@ -39,7 +37,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.loginBtn.setOnClickListener {
-            login()
+            if(binding.password.text!!.length >= 8)
+                login()
+            else
+                Toast.makeText(this@MainActivity, "Password must be atleast 8 characters", Toast.LENGTH_SHORT).show()
         }
 
         setContentView(binding.root)

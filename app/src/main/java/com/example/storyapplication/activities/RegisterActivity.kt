@@ -6,6 +6,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.storyapplication.databinding.ActivityRegisterBinding
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
@@ -26,7 +27,10 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.registerBtn.setOnClickListener {
-            register()
+            if(binding.password.text!!.length >= 8)
+                register()
+            else
+                Toast.makeText(this@RegisterActivity, "Password must be atleast 8 characters", Toast.LENGTH_SHORT).show()
         }
 
         setContentView(binding.root)
@@ -46,10 +50,8 @@ class RegisterActivity : AppCompatActivity() {
             ) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    Log.d("JS22-1", "onSuccess: $responseBody")
                     NavigationUtil.replaceActivityNoBack(this@RegisterActivity, MainActivity::class.java)
                 } else {
-                    Log.d("JS22-1", "onFailure: ${response.message()}")
                 }
             }
 

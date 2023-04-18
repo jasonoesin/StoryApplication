@@ -42,7 +42,7 @@
             android:autofillHints="email"
             android:inputType="textEmailAddress"/>
 
-        <EditText
+        <com.example.storyapplication.views.ValidateEditText
             android:id="@+id/password"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
