@@ -1,5 +1,9 @@
-package com.example.storyapplication.database
+package com.example.storyapplication.di
+
+
 import android.content.Context
+import com.example.storyapplication.data.StoryDatabase
+import com.example.storyapplication.data.StoryRepository
 import com.example.storyapplication.retrofit.ApiConfig
 
 object Injection {

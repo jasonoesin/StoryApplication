@@ -1,18 +1,19 @@
 package com.example.storyapplication.fragments
 
-import StoryViewModel
-import ViewModelFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapplication.adapter.LoadingStateAdapter
-import com.example.storyapplication.adapter.StoryPagingAdapter
+import com.example.storyapplication.adapter.StoryAdapter
+import com.example.storyapplication.data.MainViewModel
+import com.example.storyapplication.data.ViewModelFactory
 import com.example.storyapplication.databinding.FragmentHomeBinding
-import androidx.fragment.app.viewModels
+import com.example.storyapplication.utilities.LogUtil
 
 class HomeFragment : Fragment() {
 
@@ -24,34 +25,26 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
-        setupRv()
         getStories()
 
         return binding.root
     }
 
-    private lateinit var storyAdapter : StoryPagingAdapter
-
-    private val storyViewModel: StoryViewModel by viewModels {
+    private val mainViewModel: MainViewModel by viewModels {
         ViewModelFactory(requireContext())
     }
 
-    private fun setupRv(){
-        storyAdapter = StoryPagingAdapter(requireContext())
-        ViewCompat.setNestedScrollingEnabled(binding.rvStory, false)
-        binding.rvStory.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = storyAdapter.withLoadStateFooter(
-                footer = LoadingStateAdapter {
-                    storyAdapter.retry()
-                }
-            )
-        }
-    }
-
     private fun getStories() {
-        storyViewModel.stories.observe(requireActivity()) {
-            storyAdapter.submitData(lifecycle, it)
+        val adapter = StoryAdapter(requireActivity())
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        binding.rvStory.layoutManager = LinearLayoutManager(context)
+
+        mainViewModel.story.observe(requireActivity()) {
+            adapter.submitData(lifecycle, it)
         }
     }
 }

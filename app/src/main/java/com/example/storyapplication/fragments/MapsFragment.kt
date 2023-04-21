@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.example.storyapplication.R
 import com.example.storyapplication.responses.GetResponse
 import com.example.storyapplication.retrofit.ApiConfig
+import com.example.storyapplication.utilities.LogUtil
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -59,17 +60,9 @@ class MapsFragment : Fragment() {
             ) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                        LatLng(
-//                            responseBody.listStory[0].lat,
-//                            responseBody.listStory[0].lon)
-//                        , 15f))
-
                     responseBody.listStory.forEach {
-                        Log.d("JS22-1", "test: ${it.name + " " + it.lat }")
                         val latLng = LatLng(it.lat, it.lon)
                         googleMap.addMarker(MarkerOptions().position(latLng).title(it.name))
-
                         boundsBuilder.include(latLng)
                     }
 
@@ -83,7 +76,7 @@ class MapsFragment : Fragment() {
                         )
                     )
                 } else {
-                    Log.d("JS22-1", "onFailure: ${response.message()}")
+                    LogUtil.LogD("onFailure: ${response.message()}")
                 }
             }
 

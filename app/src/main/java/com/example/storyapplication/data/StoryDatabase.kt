@@ -1,5 +1,4 @@
-package com.example.storyapplication.database
-
+package com.example.storyapplication.data
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -12,6 +11,7 @@ import com.example.storyapplication.responses.ListStoryItem
     exportSchema = false
 )
 abstract class StoryDatabase : RoomDatabase() {
+
     companion object {
         @Volatile
         private var INSTANCE: StoryDatabase? = null
@@ -21,7 +21,7 @@ abstract class StoryDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    StoryDatabase::class.java, "quote_database"
+                    StoryDatabase::class.java, "story_database"
                 )
                     .fallbackToDestructiveMigration()
                     .build()

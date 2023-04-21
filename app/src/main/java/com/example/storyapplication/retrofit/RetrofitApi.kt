@@ -7,7 +7,6 @@ import com.example.storyapplication.responses.MessageResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitApi {
@@ -29,7 +28,7 @@ interface RetrofitApi {
     @GET("stories")
     suspend fun getStories(
         @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null
+        @Query("size") size: Int? = null,
     ): GetResponse
 
     @GET("stories?location=1")

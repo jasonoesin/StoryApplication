@@ -37,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.home-> changeFragment(HomeFragment())
                 R.id.add-> changeFragment(InsertFragment())
-                R.id.maps-> changeFragment(MapsFragment())
+                R.id.maps -> changeFragment(MapsFragment())
                 R.id.logout-> {
                     NavigationUtil.replaceActivityNoBack(this@HomeActivity, MainActivity::class.java)
                     PreferencesUtil.deleteData(this@HomeActivity)
