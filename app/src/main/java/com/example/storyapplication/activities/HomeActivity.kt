@@ -12,6 +12,7 @@ import com.example.storyapplication.adapter.StoryAdapter
 import com.example.storyapplication.databinding.ActivityHomeBinding
 import com.example.storyapplication.fragments.HomeFragment
 import com.example.storyapplication.fragments.InsertFragment
+import com.example.storyapplication.fragments.MapsFragment
 import com.example.storyapplication.responses.GetResponse
 import com.example.storyapplication.responses.MessageResponse
 import com.example.storyapplication.retrofit.ApiConfig
@@ -36,6 +37,7 @@ class HomeActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.home-> changeFragment(HomeFragment())
                 R.id.add-> changeFragment(InsertFragment())
+                R.id.maps-> changeFragment(MapsFragment())
                 R.id.logout-> {
                     NavigationUtil.replaceActivityNoBack(this@HomeActivity, MainActivity::class.java)
                     PreferencesUtil.deleteData(this@HomeActivity)

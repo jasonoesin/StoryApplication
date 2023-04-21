@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryApplication"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDz40t5MibYMB4BE8SB8MqANF0W15yUxVE" />
+
         <activity
             android:name=".activities.CameraActivity"
             android:exported="false" />

@@ -1,19 +1,18 @@
 package com.example.storyapplication.fragments
 
+import StoryViewModel
+import ViewModelFactory
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.storyapplication.adapter.StoryAdapter
+import com.example.storyapplication.adapter.LoadingStateAdapter
+import com.example.storyapplication.adapter.StoryPagingAdapter
 import com.example.storyapplication.databinding.FragmentHomeBinding
-import com.example.storyapplication.responses.GetResponse
-import com.example.storyapplication.retrofit.ApiConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.fragment.app.viewModels
 
 class HomeFragment : Fragment() {
 
@@ -25,35 +24,34 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
+        setupRv()
         getStories()
 
         return binding.root
     }
 
-    private fun getStories() {
-        val client = ApiConfig.getRetrofitApiHeader().getStories()
+    private lateinit var storyAdapter : StoryPagingAdapter
 
-        client.enqueue(object : Callback<GetResponse> {
-            override fun onResponse(
-                call: Call<GetResponse>,
-                response: Response<GetResponse>
-            ) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    val storyAdapter = StoryAdapter(requireContext(), responseBody.listStory)
-                    binding.rvStory.adapter = storyAdapter
-                    binding.rvStory.setHasFixedSize(true)
-                    binding.rvStory.layoutManager = LinearLayoutManager(activity)
-                    Log.d("JS22-1", "onSuccess: $responseBody")
+    private val storyViewModel: StoryViewModel by viewModels {
+        ViewModelFactory(requireContext())
+    }
 
-                } else {
-                    Log.d("JS22-1", "onFailure: ${response.message()}")
+    private fun setupRv(){
+        storyAdapter = StoryPagingAdapter(requireContext())
+        ViewCompat.setNestedScrollingEnabled(binding.rvStory, false)
+        binding.rvStory.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
                 }
-            }
+            )
+        }
+    }
 
-            override fun onFailure(call: Call<GetResponse>, t: Throwable) {
-
-            }
-        })
+    private fun getStories() {
+        storyViewModel.stories.observe(requireActivity()) {
+            storyAdapter.submitData(lifecycle, it)
+        }
     }
 }

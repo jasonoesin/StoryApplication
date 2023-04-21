@@ -11,6 +11,11 @@
         android:icon="@drawable/baseline_add_24"/>
 
     <item
+        android:id="@+id/maps"
+        android:title="Maps"
+        android:icon="@drawable/baseline_map_24"/>
+
+    <item
         android:id="@+id/logout"
         android:title="Logout"
         android:icon="@drawable/baseline_exit_to_app_24"/>
